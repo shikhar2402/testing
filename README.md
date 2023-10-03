@@ -1,6 +1,16 @@
 # django-todo
 A simple todo app built with django
+resource "aws_cloudwatch_event_rule" "daily_schedule_rule" {
+  name        = "glue-job-daily-schedule"
+  description = "Schedule for Glue job"
+  schedule_expression = "cron(0 12 * * ? *)"  # Daily at 6:00 PM IST (12:00 PM UTC)
+}
 
+resource "aws_cloudwatch_event_target" "trigger_glue_job" {
+  rule      = aws_cloudwatch_event_rule.daily_schedule_rule.name
+  target_id = "trigger-glue-job"
+  arn       = aws_glue_job.example_job.arn
+}
 ![todo App](https://raw.githubusercontent.com/shreys7/django-todo/develop/staticfiles/todoApp.png)
 ### Setup
 To get this repository, run the following command inside your git enabled terminal
